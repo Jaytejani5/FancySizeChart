@@ -18,9 +18,10 @@
         }
         
         #detail-view { display: none; padding: 15px; }
-        .detail-header { display: flex; align-items: center; margin-bottom: 15px; }
-        .back-button { padding: 10px 15px; background: #ddd; border: none; border-radius: 5px; font-weight: bold; margin-right: 15px; cursor: pointer;}
-        .shape-title { font-size: 1.2rem; font-weight: bold; text-transform: uppercase; }
+        .detail-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; }
+        .back-button { padding: 10px 15px; background: #ddd; border: none; border-radius: 5px; font-weight: bold; cursor: pointer;}
+        .shape-title { font-size: 1.2rem; font-weight: bold; text-transform: uppercase; display: flex; align-items: center; }
+        .metric-badge { background: #666; color: white; padding: 4px 8px; border-radius: 4px; font-size: 0.85rem; margin-left: 10px; }
         
         table { width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
         th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; font-size: 0.95rem; }
@@ -40,14 +41,16 @@
     <div id="detail-view">
         <div class="detail-header">
             <button class="back-button" onclick="goBack()">← Back</button>
-            <div class="shape-title" id="shape-title">Shape Name</div>
+            <div class="shape-title">
+                <span id="shape-title-text">Shape Name</span>
+                <span class="metric-badge" id="shape-metric">H-63</span>
+            </div>
         </div>
         <table>
             <thead>
                 <tr>
                     <th>Size (mm)</th>
                     <th>Wt/pcs</th>
-                    <th id="metric-header">Status</th>
                 </tr>
             </thead>
             <tbody id="ledger-body">
@@ -61,104 +64,104 @@
             "OVAL": {
                 metric: "H-63",
                 sizes: [
-                    { size: "3.00*2.00", weight: "5 pt", status: "Running" },
-                    { size: "3.50*2.50", weight: "8 pt", status: "Running" },
-                    { size: "4.00*2.50", weight: "10 pt", status: "Running" },
-                    { size: "4.00*3.00", weight: "13 pt", status: "Running" },
-                    { size: "4.50*3.00", weight: "15 pt", status: "Running" },
-                    { size: "5.00*3.00", weight: "18 pt", status: "Running" },
-                    { size: "5.00*3.50", weight: "24 pt", status: "Running" },
-                    { size: "5.50*3.50", weight: "26 pt", status: "Running" },
-                    { size: "5.50*3.80", weight: "30 pt", status: "" },
-                    { size: "6.00*4.00", weight: "38 pt", status: "Running" },
-                    { size: "6.30*4.50", weight: "48 pt", status: "" },
-                    { size: "6.50*4.50", weight: "50 pt", status: "Running" },
-                    { size: "6.70*4.50", weight: "52 pt", status: "" },
-                    { size: "7.00*5.00", weight: "70 pt", status: "Running" },
-                    { size: "8.00*5.70", weight: "1 carat", status: "" },
-                    { size: "9.10*6.50", weight: "1.50 carat", status: "" },
-                    { size: "10.10*7.20", weight: "2 carat", status: "" }
+                    { size: "3.00*2.00", weight: "5 pt" },
+                    { size: "3.50*2.50", weight: "8 pt" },
+                    { size: "4.00*2.50", weight: "10 pt" },
+                    { size: "4.00*3.00", weight: "13 pt" },
+                    { size: "4.50*3.00", weight: "15 pt" },
+                    { size: "5.00*3.00", weight: "18 pt" },
+                    { size: "5.00*3.50", weight: "24 pt" },
+                    { size: "5.50*3.50", weight: "26 pt" },
+                    { size: "5.50*3.80", weight: "30 pt" },
+                    { size: "6.00*4.00", weight: "38 pt" },
+                    { size: "6.30*4.50", weight: "48 pt" },
+                    { size: "6.50*4.50", weight: "50 pt" },
+                    { size: "6.70*4.50", weight: "52 pt" },
+                    { size: "7.00*5.00", weight: "70 pt" },
+                    { size: "8.00*5.70", weight: "1 carat" },
+                    { size: "9.10*6.50", weight: "1.50 carat" },
+                    { size: "10.10*7.20", weight: "2 carat" }
                 ]
             },
             "PEAR": {
                 metric: "H-63",
                 sizes: [
-                    { size: "3.00*2.00", weight: "5 pt", status: "Running" },
-                    { size: "4.00*2.50", weight: "10 pt", status: "Running" },
-                    { size: "4.00*3.00", weight: "13 pt", status: "" },
-                    { size: "4.50*3.00", weight: "15 pt", status: "Running" },
-                    { size: "5.00*3.00", weight: "18 pt", status: "Running" },
-                    { size: "5.40*3.50", weight: "25 pt", status: "Running" },
-                    { size: "6.00*4.00", weight: "37 pt", status: "Running" },
-                    { size: "6.30*4.50", weight: "48 pt", status: "" },
-                    { size: "6.50*4.50", weight: "50 pt", status: "Running" },
-                    { size: "6.80*4.40", weight: "50 pt", status: "" },
-                    { size: "7.00*5.00", weight: "68 pt", status: "Running" },
-                    { size: "8.00*5.00", weight: "75 pt", status: "" },
-                    { size: "8.50*5.50", weight: "1 carat", status: "" },
-                    { size: "9.60*6.40", weight: "1.50 carat", status: "" },
-                    { size: "10.50*7.00", weight: "2 carat", status: "" }
+                    { size: "3.00*2.00", weight: "5 pt" },
+                    { size: "4.00*2.50", weight: "10 pt" },
+                    { size: "4.00*3.00", weight: "13 pt" },
+                    { size: "4.50*3.00", weight: "15 pt" },
+                    { size: "5.00*3.00", weight: "18 pt" },
+                    { size: "5.40*3.50", weight: "25 pt" },
+                    { size: "6.00*4.00", weight: "37 pt" },
+                    { size: "6.30*4.50", weight: "48 pt" },
+                    { size: "6.50*4.50", weight: "50 pt" },
+                    { size: "6.80*4.40", weight: "50 pt" },
+                    { size: "7.00*5.00", weight: "68 pt" },
+                    { size: "8.00*5.00", weight: "75 pt" },
+                    { size: "8.50*5.50", weight: "1 carat" },
+                    { size: "9.60*6.40", weight: "1.50 carat" },
+                    { size: "10.50*7.00", weight: "2 carat" }
                 ]
             },
             "MARQUISE": {
                 metric: "H-66",
                 sizes: [
-                    { size: "3.00*1.50", weight: "3 pt", status: "Running" },
-                    { size: "3.50*1.75", weight: "4 pt", status: "Running" },
-                    { size: "4.00*2.00", weight: "7 pt", status: "Running" },
-                    { size: "4.50*2.50", weight: "10 pt", status: "Running" },
-                    { size: "5.00*2.50", weight: "12 pt", status: "Running" },
-                    { size: "5.50*2.75", weight: "15 pt", status: "Running" },
-                    { size: "5.00*3.00", weight: "17 pt", status: "Running" },
-                    { size: "6.00*3.00", weight: "20 pt", status: "Running" },
-                    { size: "6.50*3.30", weight: "28 pt", status: "" },
-                    { size: "7.00*3.50", weight: "33 pt", status: "" },
-                    { size: "7.40*3.80", weight: "40 pt", status: "" },
-                    { size: "8.00*4.00", weight: "50 pt", status: "Running" },
-                    { size: "9.00*4.50", weight: "70 pt", status: "Running" },
-                    { size: "10.00*5.00", weight: "95 pt", status: "" },
-                    { size: "10.20*5.10", weight: "1 carat", status: "" },
-                    { size: "11.60*5.80", weight: "1.50 carat", status: "" },
-                    { size: "12.80*6.40", weight: "2 carat", status: "" }
+                    { size: "3.00*1.50", weight: "3 pt" },
+                    { size: "3.50*1.75", weight: "4 pt" },
+                    { size: "4.00*2.00", weight: "7 pt" },
+                    { size: "4.50*2.50", weight: "10 pt" },
+                    { size: "5.00*2.50", weight: "12 pt" },
+                    { size: "5.50*2.75", weight: "15 pt" },
+                    { size: "5.00*3.00", weight: "17 pt" },
+                    { size: "6.00*3.00", weight: "20 pt" },
+                    { size: "6.50*3.30", weight: "28 pt" },
+                    { size: "7.00*3.50", weight: "33 pt" },
+                    { size: "7.40*3.80", weight: "40 pt" },
+                    { size: "8.00*4.00", weight: "50 pt" },
+                    { size: "9.00*4.50", weight: "70 pt" },
+                    { size: "10.00*5.00", weight: "95 pt" },
+                    { size: "10.20*5.10", weight: "1 carat" },
+                    { size: "11.60*5.80", weight: "1.50 carat" },
+                    { size: "12.80*6.40", weight: "2 carat" }
                 ]
             },
             "EMERALD": {
                 metric: "H-65",
                 sizes: [
-                    { size: "3.00*2.00", weight: "8 pt", status: "Running" },
-                    { size: "3.20*2.20", weight: "10 pt", status: "Running" },
-                    { size: "3.50*2.50", weight: "15 pt", status: "Running" },
-                    { size: "4.00*2.80", weight: "20 pt", status: "Running" },
-                    { size: "4.00*3.00", weight: "25 pt", status: "Running" },
-                    { size: "4.50*3.00", weight: "30 pt", status: "Running" },
-                    { size: "5.00*3.00", weight: "33 pt", status: "Running" },
-                    { size: "5.00*3.50", weight: "40 pt", status: "Running" },
-                    { size: "5.50*3.50", weight: "45 pt", status: "Running" },
-                    { size: "5.40*3.80", weight: "50 pt", status: "" },
-                    { size: "6.00*4.00", weight: "68 pt", status: "Running" },
-                    { size: "6.50*4.50", weight: "90 pt", status: "" },
-                    { size: "7.00*5.00", weight: "1 carat", status: "" },
-                    { size: "7.70*5.30", weight: "1.50 carat", status: "" },
-                    { size: "8.50*6.10", weight: "2.00 carat", status: "" }
+                    { size: "3.00*2.00", weight: "8 pt" },
+                    { size: "3.20*2.20", weight: "10 pt" },
+                    { size: "3.50*2.50", weight: "15 pt" },
+                    { size: "4.00*2.80", weight: "20 pt" },
+                    { size: "4.00*3.00", weight: "25 pt" },
+                    { size: "4.50*3.00", weight: "30 pt" },
+                    { size: "5.00*3.00", weight: "33 pt" },
+                    { size: "5.00*3.50", weight: "40 pt" },
+                    { size: "5.50*3.50", weight: "45 pt" },
+                    { size: "5.40*3.80", weight: "50 pt" },
+                    { size: "6.00*4.00", weight: "68 pt" },
+                    { size: "6.50*4.50", weight: "90 pt" },
+                    { size: "7.00*5.00", weight: "1 carat" },
+                    { size: "7.70*5.30", weight: "1.50 carat" },
+                    { size: "8.50*6.10", weight: "2.00 carat" }
                 ]
             },
             "PRINCESS": {
                 metric: "H-70",
                 sizes: [
-                    { size: "1.80 mm", weight: "3 pt", status: "Running" },
-                    { size: "2.00 mm", weight: "5 pt", status: "Running" },
-                    { size: "2.25 mm", weight: "7 pt", status: "" },
-                    { size: "2.50 mm", weight: "9 pt", status: "Running" },
-                    { size: "2.75 mm", weight: "12 pt", status: "" },
-                    { size: "3.00 mm", weight: "15 pt", status: "Running" },
-                    { size: "3.25 mm", weight: "20 pt", status: "Running" },
-                    { size: "3.50 mm", weight: "25 pt", status: "Running" },
-                    { size: "4.00 mm", weight: "38 pt", status: "Running" },
-                    { size: "4.40 mm", weight: "50 pt", status: "Running" },
-                    { size: "5.00 mm", weight: "75 pt", status: "Running" },
-                    { size: "5.50 mm", weight: "1 carat", status: "" },
-                    { size: "6.35 mm", weight: "1.50 carat", status: "" },
-                    { size: "7.00 mm", weight: "2.00 carat", status: "" }
+                    { size: "1.80 mm", weight: "3 pt" },
+                    { size: "2.00 mm", weight: "5 pt" },
+                    { size: "2.25 mm", weight: "7 pt" },
+                    { size: "2.50 mm", weight: "9 pt" },
+                    { size: "2.75 mm", weight: "12 pt" },
+                    { size: "3.00 mm", weight: "15 pt" },
+                    { size: "3.25 mm", weight: "20 pt" },
+                    { size: "3.50 mm", weight: "25 pt" },
+                    { size: "4.00 mm", weight: "38 pt" },
+                    { size: "4.40 mm", weight: "50 pt" },
+                    { size: "5.00 mm", weight: "75 pt" },
+                    { size: "5.50 mm", weight: "1 carat" },
+                    { size: "6.35 mm", weight: "1.50 carat" },
+                    { size: "7.00 mm", weight: "2.00 carat" }
                 ]
             }
         };
@@ -170,7 +173,7 @@
         ];
         
         remainingShapes.forEach(shape => {
-            db[shape] = { metric: "-", sizes: [{ size: "Data needed", weight: "-", status: "-" }] };
+            db[shape] = { metric: "-", sizes: [{ size: "Data needed", weight: "-" }] };
         });
 
         function initApp() {
@@ -189,15 +192,15 @@
             document.getElementById('detail-view').style.display = 'block';
             
             const data = db[shapeName];
-            document.getElementById('shape-title').innerText = shapeName;
-            document.getElementById('metric-header').innerText = data.metric;
+            document.getElementById('shape-title-text').innerText = shapeName;
+            document.getElementById('shape-metric').innerText = data.metric;
             
             const tbody = document.getElementById('ledger-body');
             tbody.innerHTML = '';
             
             data.sizes.forEach(row => {
                 const tr = document.createElement('tr');
-                tr.innerHTML = `<td>${row.size}</td><td>${row.weight}</td><td>${row.status}</td>`;
+                tr.innerHTML = `<td>${row.size}</td><td>${row.weight}</td>`;
                 tbody.appendChild(tr);
             });
         }
