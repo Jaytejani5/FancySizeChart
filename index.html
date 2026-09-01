@@ -1,1 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>FancySizeChart</title>
+    <style>
+        body { font-family: sans-serif; margin: 0; padding: 0; background-color: #f5f5f5; }
+        .header { background: #333; color: white; padding: 15px; text-align: center; font-size: 1.2rem; font-weight: bold; }
+        
+        #index-view { padding: 15px; }
+        .grid-container { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+        .shape-button { 
+            padding: 20px 10px; text-align: center; background: white; 
+            border: 1px solid #ddd; border-radius: 8px; font-weight: bold; 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05); font-size: 1rem;
+            cursor: pointer;
+        }
+        
+        #detail-view { display: none; padding: 15px; }
+        .detail-header { display: flex; align-items: center; margin-bottom: 15px; }
+        .back-button { padding: 10px 15px; background: #ddd; border: none; border-radius: 5px; font-weight: bold; margin-right: 15px; cursor: pointer;}
+        .shape-title { font-size: 1.2rem; font-weight: bold; text-transform: uppercase; }
+        
+        table { width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; font-size: 0.95rem; }
+        th { background-color: #e0e0e0; font-weight: bold; }
+    </style>
+</head>
+<body>
 
+    <div class="header" id="app-header">Fancy Size Chart (+/- 0.05 mm)</div>
+
+    <div id="index-view">
+        <div class="grid-container" id="shape-grid">
+            <!-- Dynamically populated -->
+        </div>
+    </div>
+
+    <div id="detail-view">
+        <div class="detail-header">
+            <button class="back-button" onclick="goBack()">← Back</button>
+            <div class="shape-title" id="shape-title">Shape Name</div>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Size (mm)</th>
+                    <th>Wt/pcs</th>
+                    <th id="metric-header">Status</th>
+                </tr>
+            </thead>
+            <tbody id="ledger-body">
+                <!-- Dynamically populated -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        const db = {
+            "OVAL": {
+                metric: "H-63",
+                sizes: [
+                    { size: "3.00*2.00", weight: "5 pt", status: "Running" },
+                    { size: "3.50*2.50", weight: "8 pt", status: "Running" },
+                    { size: "4.00*2.50", weight: "10 pt", status: "Running" },
+                    { size: "4.00*3.00", weight: "13 pt", status: "Running" },
+                    { size: "4.50*3.00", weight: "15 pt", status: "Running" },
+                    { size: "5.00*3.00", weight: "18 pt", status: "Running" },
+                    { size: "5.00*3.50", weight: "24 pt", status: "Running" },
+                    { size: "5.50*3.50", weight: "26 pt", status: "Running" },
+                    { size: "5.50*3.80", weight: "30 pt", status: "" },
+                    { size: "6.00*4.00", weight: "38 pt", status: "Running" },
+                    { size: "6.30*4.50", weight: "48 pt", status: "" },
+                    { size: "6.50*4.50", weight: "50 pt", status: "Running" },
+                    { size: "6.70*4.50", weight: "52 pt", status: "" },
+                    { size: "7.00*5.00", weight: "70 pt", status: "Running" },
+                    { size: "8.00*5.70", weight: "1 carat", status: "" },
+                    { size: "9.10*6.50", weight: "1.50 carat", status: "" },
+                    { size: "10.10*7.20", weight: "2 carat", status: "" }
+                ]
+            },
+            "PEAR": {
+                metric: "H-63",
+                sizes: [
+                    { size: "3.00*2.00", weight: "5 pt", status: "Running" },
+                    { size: "4.00*2.50", weight: "10 pt", status: "Running" },
+                    { size: "4.00*3.00", weight: "13 pt", status: "" },
+                    { size: "4.50*3.00", weight: "15 pt", status: "Running" },
+                    { size: "5.00*3.00", weight: "18 pt", status: "Running" },
+                    { size: "5.40*3.50", weight: "25 pt", status: "Running" },
+                    { size: "6.00*4.00", weight: "37 pt", status: "Running" },
+                    { size: "6.30*4.50", weight: "48 pt", status: "" },
+                    { size: "6.50*4.50", weight: "50 pt", status: "Running" },
+                    { size: "6.80*4.40", weight: "50 pt", status: "" },
+                    { size: "7.00*5.00", weight: "68 pt", status: "Running" },
+                    { size: "8.00*5.00", weight: "75 pt", status: "" },
+                    { size: "8.50*5.50", weight: "1 carat", status: "" },
+                    { size: "9.60*6.40", weight: "1.50 carat", status: "" },
+                    { size: "10.50*7.00", weight: "2 carat", status: "" }
+                ]
+            },
+            "MARQUISE": {
+                metric: "H-66",
+                sizes: [
+                    { size: "3.00*1.50", weight: "3 pt", status: "Running" },
+                    { size: "3.50*1.75", weight: "4 pt", status: "Running" },
+                    { size: "4.00*2.00", weight: "7 pt", status: "Running" },
+                    { size: "4.50*2.50", weight: "10 pt", status: "Running" },
+                    { size: "5.00*2.50", weight: "12 pt", status: "Running" },
+                    { size: "5.50*2.75", weight: "15 pt", status: "Running" },
+                    { size: "5.00*3.00", weight: "17 pt", status: "Running" },
+                    { size: "6.00*3.00", weight: "20 pt", status: "Running" },
+                    { size: "6.50*3.30", weight: "28 pt", status: "" },
+                    { size: "7.00*3.50", weight: "33 pt", status: "" },
+                    { size: "7.40*3.80", weight: "40 pt", status: "" },
+                    { size: "8.00*4.00", weight: "50 pt", status: "Running" },
+                    { size: "9.00*4.50", weight: "70 pt", status: "Running" },
+                    { size: "10.00*5.00", weight: "95 pt", status: "" },
+                    { size: "10.20*5.10", weight: "1 carat", status: "" },
+                    { size: "11.60*5.80", weight: "1.50 carat", status: "" },
+                    { size: "12.80*6.40", weight: "2 carat", status: "" }
+                ]
+            },
+            "EMERALD": {
+                metric: "H-65",
+                sizes: [
+                    { size: "3.00*2.00", weight: "8 pt", status: "Running" },
+                    { size: "3.20*2.20", weight: "10 pt", status: "Running" },
+                    { size: "3.50*2.50", weight: "15 pt", status: "Running" },
+                    { size: "4.00*2.80", weight: "20 pt", status: "Running" },
+                    { size: "4.00*3.00", weight: "25 pt", status: "Running" },
+                    { size: "4.50*3.00", weight: "30 pt", status: "Running" },
+                    { size: "5.00*3.00", weight: "33 pt", status: "Running" },
+                    { size: "5.00*3.50", weight: "40 pt", status: "Running" },
+                    { size: "5.50*3.50", weight: "45 pt", status: "Running" },
+                    { size: "5.40*3.80", weight: "50 pt", status: "" },
+                    { size: "6.00*4.00", weight: "68 pt", status: "Running" },
+                    { size: "6.50*4.50", weight: "90 pt", status: "" },
+                    { size: "7.00*5.00", weight: "1 carat", status: "" },
+                    { size: "7.70*5.30", weight: "1.50 carat", status: "" },
+                    { size: "8.50*6.10", weight: "2.00 carat", status: "" }
+                ]
+            },
+            "PRINCESS": {
+                metric: "H-70",
+                sizes: [
+                    { size: "1.80 mm", weight: "3 pt", status: "Running" },
+                    { size: "2.00 mm", weight: "5 pt", status: "Running" },
+                    { size: "2.25 mm", weight: "7 pt", status: "" },
+                    { size: "2.50 mm", weight: "9 pt", status: "Running" },
+                    { size: "2.75 mm", weight: "12 pt", status: "" },
+                    { size: "3.00 mm", weight: "15 pt", status: "Running" },
+                    { size: "3.25 mm", weight: "20 pt", status: "Running" },
+                    { size: "3.50 mm", weight: "25 pt", status: "Running" },
+                    { size: "4.00 mm", weight: "38 pt", status: "Running" },
+                    { size: "4.40 mm", weight: "50 pt", status: "Running" },
+                    { size: "5.00 mm", weight: "75 pt", status: "Running" },
+                    { size: "5.50 mm", weight: "1 carat", status: "" },
+                    { size: "6.35 mm", weight: "1.50 carat", status: "" },
+                    { size: "7.00 mm", weight: "2.00 carat", status: "" }
+                ]
+            }
+        };
+
+        const remainingShapes = [
+            "RADIANT", "LONG CUSHION", "ASSCHER", "SQ. RADIANT", "CUSHION", 
+            "BAGUETTE", "TRILLION", "HALF MOON", "CADILAC", "TRAPEZOID", 
+            "HEART", "T. BAGUETTE", "ROSE CUT", "HEXAGONE", "OCTAGONE"
+        ];
+        
+        remainingShapes.forEach(shape => {
+            db[shape] = { metric: "-", sizes: [{ size: "Data needed", weight: "-", status: "-" }] };
+        });
+
+        function initApp() {
+            const grid = document.getElementById('shape-grid');
+            for (const shape in db) {
+                const btn = document.createElement('div');
+                btn.className = 'shape-button';
+                btn.innerText = shape;
+                btn.onclick = () => openShape(shape);
+                grid.appendChild(btn);
+            }
+        }
+
+        function openShape(shapeName) {
+            document.getElementById('index-view').style.display = 'none';
+            document.getElementById('detail-view').style.display = 'block';
+            
+            const data = db[shapeName];
+            document.getElementById('shape-title').innerText = shapeName;
+            document.getElementById('metric-header').innerText = data.metric;
+            
+            const tbody = document.getElementById('ledger-body');
+            tbody.innerHTML = '';
+            
+            data.sizes.forEach(row => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<td>${row.size}</td><td>${row.weight}</td><td>${row.status}</td>`;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function goBack() {
+            document.getElementById('detail-view').style.display = 'none';
+            document.getElementById('index-view').style.display = 'block';
+        }
+
+        initApp();
+    </script>
+</body>
+</html>
